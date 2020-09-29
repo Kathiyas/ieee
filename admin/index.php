@@ -1,7 +1,12 @@
 <?php 
+
+session_start();
   $mysqli = new mysqli("localhost","root","","ieee");
   $login = false;
   
+  if(isset($_SESSION['email'])){header("location: index1.php");}
+
+
   if ($mysqli -> connect_errno) {
     echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
     exit();
@@ -14,14 +19,15 @@
      
     $email = $_POST['email'];
     $password = $_POST['password'];
-
+ 
     if($result){
         while ($row = $result -> fetch_assoc() ) {
             if($row['email'] == $email && $password == $row['password'])
             {
                $login = true;
-               
-                header("Location: index1.html"); 
+              // $_SESSION['loggedin'] = true;
+               $_SESSION['email'] = $email;
+                header("Location: index1.php"); 
             }
           
         }
@@ -127,11 +133,4 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
-
-</body>
-
-</html>
+  <script src="vendor/jquery-easing/jquery
