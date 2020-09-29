@@ -1,3 +1,20 @@
+<?php 
+  include_once('private/init.php');
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $first_name = $_POST['first_name'];
+      $last_name = $_POST['last_name'];
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+
+      $result = add_user($first_name,$last_name,$email,$password);
+      if($result)
+      {
+        header('location:index1.php');
+      }
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,31 +49,33 @@
           <div class="col-lg-7">
             <div class="p-5">
               <div class="text-center">
+                  <?php if( $_SERVER['REQUEST_METHOD'] === 'POST' && !$result ){ ?>
+                    <div class="alert alert-danger" role="alert">
+                        Something Wrong
+                      </div>
+                  <?php }?>    
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form class="user">
+              <form class="user" method="POST" action="register.php">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
+                    <input type="text" name="first_name" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
+                    <input type="text" name="last_name" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
                   </div>
                 </div>
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
+                  <input type="email" name="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                    <input type="password" name="password" email="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
                   </div>
-                  <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
-                  </div>
+                  
                 </div>
-                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                  Register Account
-                </a>
+                <input type="submit" value ='Register Account' class="btn btn-primary btn-user btn-block" >
+                
                 <hr>
                 <a href="index.html" class="btn btn-google btn-user btn-block">
                   <i class="fab fa-google fa-fw"></i> Register with Google

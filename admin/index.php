@@ -1,31 +1,18 @@
 <?php 
 
-session_start();
-  $mysqli = new mysqli("localhost","root","","ieee");
+require_once('private/init.php') ;
+
+  $result = find_all_admin();
   $login = false;
-  
-  if(isset($_SESSION['email'])){header("location: index1.php");}
-
-
-  if ($mysqli -> connect_errno) {
-    echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
-    exit();
-  }
-
-  $sql = 'SELECT * from admin';
-  $result = $mysqli -> query($sql);
- 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      
     $email = $_POST['email'];
     $password = $_POST['password'];
- 
     if($result){
-        while ($row = $result -> fetch_assoc() ) {
+        while ($row = mysqli_fetch_assoc($result)) {
             if($row['email'] == $email && $password == $row['password'])
             {
                $login = true;
-              // $_SESSION['loggedin'] = true;
                $_SESSION['email'] = $email;
                 header("Location: index1.php"); 
             }
