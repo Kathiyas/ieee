@@ -2,6 +2,9 @@
 
 require_once('private/init.php') ;
 
+if(isset($_SESSION['email'])){
+  header("location: index1.php");
+ }
   $result = find_all_admin();
   $login = false;
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,7 +17,7 @@ require_once('private/init.php') ;
             {
                $login = true;
                $_SESSION['email'] = $email;
-                header("Location: index1.php"); 
+               header("Location: index1.php"); 
             }
           
         }

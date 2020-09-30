@@ -1,5 +1,5 @@
 <?php
-    session_start(); // turn on sessions
+    session_start();
 
     require_once('credentials.php');
     require_once('query.php');
