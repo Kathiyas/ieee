@@ -1,29 +1,13 @@
 <?php 
 
 require_once('private/init.php') ;
+require_once('process/fb-init.php');
 
-if(isset($_SESSION['email'])){
+if(isset($_SESSION['access_token'] )){
   header("location: index1.php");
+
  }
-  $result = find_all_admin();
-  $login = false;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-     
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    if($result){
-        while ($row = mysqli_fetch_assoc($result)) {
-            if($row['email'] == $email && $password == $row['password'])
-            {
-               $login = true;
-               $_SESSION['email'] = $email;
-               header("Location: index1.php"); 
-            }
-          
-        }
-    }
-    
-  }
+
 
 ?>
 
@@ -66,18 +50,16 @@ if(isset($_SESSION['email'])){
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
-                    <?php   if($login == true) { ?>
-                      <div class="alert alert-primary" role="alert">
-                        Successfully Login
+                    
+                      <div id="result" >
+                        
                       </div>
-                    <?php } else if($login == false && $_SERVER['REQUEST_METHOD'] === 'POST') { ?>  
-                      <div class="alert alert-danger" role="alert">
-                        Invalid Login
-                      </div>
-                    <?php } ?> 
+                     
+                      
+                 
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div>
-                  <form method="POST" action="index.php">
+                  <form id="form">
                     <div class="form-group">
                       <input type="email" name="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                     </div>
@@ -95,7 +77,7 @@ if(isset($_SESSION['email'])){
                     <a href="index.html" class="btn btn-google btn-user btn-block">
                       <i class="fab fa-google fa-fw"></i> Login with Google
                     </a>
-                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                    <a href="<?php echo $login_url ?>" class="btn btn-facebook btn-user btn-block">
                       <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                     </a>
                   </form>
@@ -118,9 +100,44 @@ if(isset($_SESSION['email'])){
 
   </div>
 
+
   <!-- Bootstrap core JavaScript-->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery
+  <script src="vendor/jquery-easing/jquery"></script>
+  <script>
+      $("#form").submit(function(event) {
+        var ajaxRequest;
+
+        /* Stop form from submitting normally */
+        event.preventDefault();
+
+        /* Clear result div*/
+        $("#result").html('');
+
+        /* Get from elements values */
+        var values = $(this).serialize();
+        console.log(values);
+      
+          ajaxRequest= $.ajax({
+                url: "process/login.php",
+                type: "post",
+                data: values
+            });
+
+        /*  Request can be aborted by ajaxRequest.abort() */
+
+        ajaxRequest.done(function (response, textStatus, jqXHR){ 
+            window.location.replace("index1.php");            
+        });
+
+        /* On failure of request this function will be called  */
+        ajaxRequest.fail(function (){
+
+            // Show error
+            $("#result").append('<div id="result" class="alert alert-danger" role="alert"> Error</div>');
+        });
+      });
+  </script>
